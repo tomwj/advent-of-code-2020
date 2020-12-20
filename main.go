@@ -4,25 +4,28 @@ import (
 	"bufio"
 	"github.com/apex/log/handlers/cli"
 	"os"
+	"runtime"
 	"strconv"
+	"strings"
 
 	"github.com/apex/log"
 )
 
-func openFile(ctx log.Interface, fileName string) (err error, lines []int64) {
-	defer ctx.WithField("fileName", fileName).Trace("opening").Stop(&err)
+type PasswordEntry struct {
+	MinCount int64
+	MaxCount int64
+	Letter   string
+	Password string
+}
+
+func openFileLines(ctx log.Interface, fileName string) (err error, lines []string) {
+	defer ctx.WithField("fileName", fileName).Debug("debug")
 	file, err := os.Open(fileName)
 
 	scanner := bufio.NewScanner(file)
-	lineNumber := 1
 	for scanner.Scan() {
 		lineInFile := scanner.Text()
-		number, err := strconv.ParseInt(lineInFile, 10, 32)
-		if err != nil {
-			ctx.WithField("At line: ", lineNumber).Trace("parsing").Stop(&err)
-		}
-		lines = append(lines, number)
-		lineNumber++
+		lines = append(lines, lineInFile)
 	}
 	return err, lines
 }
@@ -46,7 +49,7 @@ func sumThreeMultiply2020(ctx log.Interface, accounts []int64) int64 {
 						"n": n,
 						"m": m,
 						"o": o,
-					}).Trace("return")
+					}).Debug("numbers used for result")
 					return n * m * o
 				}
 			}
@@ -54,22 +57,92 @@ func sumThreeMultiply2020(ctx log.Interface, accounts []int64) int64 {
 	}
 	return 0
 }
+func parseIntEntry(ctx log.Interface, s []string) []int64 {
+
+	var ints []int64
+	for i, line := range s {
+		number, err := strconv.ParseInt(line, 10, 32)
+		if err != nil {
+			ctx.WithField("At line: ", i+1).Trace("parsing").Stop(&err)
+		}
+		ints = append(ints, number)
+
+	}
+	return ints
+}
+
+func parsePasswordEntry(ctx log.Interface, s string) PasswordEntry {
+
+	// 18-20 q: xqqqwmqgtcqnqqxgsqcq
+	ctx.WithField("parsing", s)
+	entryArray := strings.Split(s, " ")
+	ctx.WithField("splitting string ", entryArray).Debugf("%v", entryArray)
+	minMax := strings.Split(entryArray[0], "-")
+
+	minCount, _ := strconv.ParseInt(minMax[0], 10, 64)
+	maxCount, _ := strconv.ParseInt(minMax[1], 10, 64)
+
+	return PasswordEntry{
+		MinCount: minCount,
+		MaxCount: maxCount,
+		Letter:   string(entryArray[1][0]),
+		Password: entryArray[2],
+	}
+}
+
+func passwordIsValidPart1(ctx log.Interface, password PasswordEntry) bool {
+	ctx.Debugf("%v", password)
+	var letterCount int64 = 0
+	for _, letter := range password.Password {
+		if string(letter) == password.Letter {
+			letterCount++
+		}
+	}
+	return (letterCount >= password.MinCount) && (letterCount <= password.MaxCount)
+}
+
+func passwordIsValidPart2(ctx log.Interface, password PasswordEntry) bool {
+	isValid := (password.Letter == string(password.Password[password.MinCount-1])) !=
+		(password.Letter == string(password.Password[password.MaxCount-1]))
+
+	defer ctx.Debugf("Valid password %v %t", password, isValid)
+	return isValid
+}
+
 func main() {
 	log.SetHandler(cli.Default)
 	log.SetLevel(log.DebugLevel)
-	ctx := log.WithFields(log.Fields{
-		"day": "1",
-	})
-	accounts := []int64{
-		1721,
-		979,
-		366,
-		299,
-		675,
-		1456,
+	pc, file, line, ok := runtime.Caller(1)
+	if !ok {
+		panic("Could not get context info for logger!")
 	}
-	println(sumTwoMultiply2020(accounts))
-	_, accountQuestion := openFile(ctx, "./data/day-1-input.txt")
-	println("Part 1 answer: ", sumTwoMultiply2020(accountQuestion))
-	println("Part 2 answer: ", sumThreeMultiply2020(ctx, accountQuestion))
+
+	filename := file[strings.LastIndex(file, "/")+1:] + ":" + strconv.Itoa(line)
+	functionName := runtime.FuncForPC(pc).Name()
+	fn := functionName[strings.LastIndex(functionName, ".")+1:]
+	ctx := log.WithFields(log.Fields{
+		"project":  "advent-of-code",
+		"file":     filename,
+		"function": fn,
+	})
+	_, lines := openFileLines(ctx, "./data/day-1-input.txt")
+	accountQuestion := parseIntEntry(ctx, lines)
+	println("Day 1 Part 1 answer: ", sumTwoMultiply2020(accountQuestion))
+	println("Day 1 Part 2 answer: ", sumThreeMultiply2020(ctx, accountQuestion))
+
+	_, passwordDBDump := openFileLines(ctx, "./data/day-2-input.txt")
+	var validCountPart1 = 0
+	var validCountPart2 = 0
+	for _, entry := range passwordDBDump {
+		parsedPassword := parsePasswordEntry(ctx, entry)
+		if passwordIsValidPart1(ctx, parsedPassword) {
+			validCountPart1++
+		}
+		if passwordIsValidPart2(ctx, parsedPassword) {
+			validCountPart2++
+		}
+	}
+	println("Day 2 Part 1 answer: ", validCountPart1)
+	println("Day 2 Part 2 answer: ", validCountPart2)
+
 }
