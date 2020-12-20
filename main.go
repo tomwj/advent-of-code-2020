@@ -111,7 +111,7 @@ func passwordIsValidPart2(ctx log.Interface, password PasswordEntry) bool {
 
 func main() {
 	log.SetHandler(cli.Default)
-	log.SetLevel(log.DebugLevel)
+	log.SetLevel(log.InfoLevel)
 	pc, file, line, ok := runtime.Caller(1)
 	if !ok {
 		panic("Could not get context info for logger!")
