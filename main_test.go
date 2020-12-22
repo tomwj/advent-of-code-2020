@@ -180,3 +180,68 @@ func TestCountTree(t *testing.T) {
 		t.Errorf("wanted %v got %v", want, got)
 	}
 }
+func TestMultiSlopeCountTree(t *testing.T) {
+	log.SetHandler(cli.Default)
+	log.SetLevel(log.InfoLevel)
+	ctx := log.WithFields(log.Fields{
+		"func": "TestCountTrees",
+	})
+
+	_, linesInFile := openFileLines(ctx, "./data/day-3-trees-example.txt")
+
+	// Right 1, down 1.
+	// Right 3, down 1. (This is the slope you already checked.)
+	// Right 5, down 1.
+	// Right 7, down 1.
+	// Right 1, down 2.
+	slopes := []Slope{
+		{1, 1},
+		{3, 1},
+		{5, 1},
+		{7, 1},
+		{1, 2},
+	}
+	productOfTreeCounts := 1
+	for _, slope := range slopes {
+		treeCount := getCountTrees(ctx, slope, linesInFile)
+		productOfTreeCounts = productOfTreeCounts * treeCount
+		ctx.Infof("Tree count: %d", treeCount)
+	}
+	ctx.Infof("Product of tree counts %d", productOfTreeCounts)
+	if productOfTreeCounts != 336 {
+		t.Errorf("wanted 336 got %v", productOfTreeCounts)
+	}
+}
+func TestMultiSlopeCountTreeSolution(t *testing.T) {
+	log.SetHandler(cli.Default)
+	log.SetLevel(log.InfoLevel)
+	ctx := log.WithFields(log.Fields{
+		"func": "TestCountTrees",
+	})
+
+	_, linesInFile := openFileLines(ctx, "./data/day-3-trees.txt")
+
+	// Right 1, down 1.
+	// Right 3, down 1. (This is the slope you already checked.)
+	// Right 5, down 1.
+	// Right 7, down 1.
+	// Right 1, down 2.
+	slopes := []Slope{
+		{1, 1},
+		{3, 1},
+		{5, 1},
+		{7, 1},
+		{1, 2},
+	}
+	productOfTreeCounts := 1
+	for _, slope := range slopes {
+		treeCount := getCountTrees(ctx, slope, linesInFile)
+		productOfTreeCounts = productOfTreeCounts * treeCount
+		ctx.Infof("Tree count: %d", treeCount)
+	}
+	ctx.Infof("Product of tree counts %d", productOfTreeCounts)
+	want := 2224913600
+	if productOfTreeCounts != want {
+		t.Errorf("wanted %d got %v", want, productOfTreeCounts)
+	}
+}

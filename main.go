@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"github.com/apex/log/handlers/cli"
 	"os"
 	"runtime"
@@ -141,7 +142,7 @@ func getValueInGrid(ctx *log.Entry, x int, y int, grid []string) interface{} {
 	return value
 }
 
-func getCountTrees(ctx *log.Entry, slope Slope, grid []string) interface{} {
+func getCountTrees(ctx *log.Entry, slope Slope, grid []string) int {
 
 	countOfTrees := 0
 	for x, y := 1, 1; y <= len(grid); x, y = x+slope.x, y+slope.y {
@@ -156,7 +157,7 @@ func getCountTrees(ctx *log.Entry, slope Slope, grid []string) interface{} {
 }
 func main() {
 	log.SetHandler(cli.Default)
-	log.SetLevel(log.DebugLevel)
+	log.SetLevel(log.InfoLevel)
 	pc, file, line, ok := runtime.Caller(1)
 	if !ok {
 		panic("Could not get context info for logger!")
@@ -189,5 +190,10 @@ func main() {
 	}
 	println("Day 2 Part 1 answer: ", validCountPart1)
 	println("Day 2 Part 2 answer: ", validCountPart2)
+
+	_, linesInFile := openFileLines(ctx, "./data/day-3-trees.txt")
+	slopeTest := Slope{3, 1}
+	treeCount := getCountTrees(ctx, slopeTest, linesInFile)
+	fmt.Printf("Day 3 Part 2 Trees answer: %d", treeCount)
 
 }
