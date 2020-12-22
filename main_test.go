@@ -101,3 +101,82 @@ func TestIsPasswordValidPart2(t *testing.T) {
 		t.Error("invalid password returned true")
 	}
 }
+func TestGetColumn(t *testing.T) {
+	log.SetHandler(cli.Default)
+	log.SetLevel(log.DebugLevel)
+	ctx := log.WithFields(log.Fields{
+		"func": "TestCheckPasswordEntry",
+	})
+
+	err, linesInFile := openFileLines(ctx, "./data/day-3-trees-example.txt")
+	got := linesInFile[0]
+
+	if err != nil {
+		t.Errorf("Error reading file %v", err)
+	}
+	want := "..##......."
+	if got != want {
+		t.Errorf("wanted %s got %s", want, got)
+	}
+
+	// This is the first column transposed
+	wantColumn := ".#......##."
+	gotColumn := getColumn(ctx, linesInFile, 1)
+	if gotColumn != wantColumn {
+		t.Errorf("wanted %s got %s", wantColumn, gotColumn)
+	}
+	wantColumn2 := "..#.#.##..#"
+	gotColumn2 := getColumn(ctx, linesInFile, 2)
+	if gotColumn != wantColumn {
+		t.Errorf("wanted col 2 %s got %s", wantColumn2, gotColumn2)
+	}
+	wantColumn14 := "#..#.#..#.."
+	gotColumn14 := getColumn(ctx, linesInFile, 14)
+	if gotColumn14 != wantColumn14 {
+		t.Errorf("wanted col 2 %s got %s", wantColumn14, gotColumn14)
+	}
+}
+
+func TestGetFromLocation(t *testing.T) {
+	log.SetHandler(cli.Default)
+	log.SetLevel(log.DebugLevel)
+	ctx := log.WithFields(log.Fields{
+		"func": "TestGetValue",
+	})
+
+	_, linesInFile := openFileLines(ctx, "./data/day-3-trees-example.txt")
+
+	want := "."
+	got := getValueInGrid(ctx, 1, 1, linesInFile)
+	if got != want {
+		t.Errorf("wanted %s got %v", want, got)
+	}
+	want = "#"
+	got = getValueInGrid(ctx, 11, 8, linesInFile)
+	if got != want {
+		t.Errorf("wanted %s got %v", want, got)
+	}
+	want = "#"
+	got = getValueInGrid(ctx, 12, 10, linesInFile)
+	if got != want {
+		t.Errorf("wanted %s got %v", want, got)
+	}
+}
+
+func TestCountTree(t *testing.T) {
+	log.SetHandler(cli.Default)
+	log.SetLevel(log.DebugLevel)
+	ctx := log.WithFields(log.Fields{
+		"func": "TestCountTrees",
+	})
+
+	_, linesInFile := openFileLines(ctx, "./data/day-3-trees-example.txt")
+
+	want := 7
+
+	slopeTest := Slope{3, 1}
+	got := getCountTrees(ctx, slopeTest, linesInFile)
+	if got != want {
+		t.Errorf("wanted %v got %v", want, got)
+	}
+}

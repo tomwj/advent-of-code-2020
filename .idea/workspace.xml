@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b9ad5f7e-d420-457a-a868-4239bdd2aa74" name="Default Changelist" comment="Day 2 Tests working, updating utils and tests.">
-      <change afterPath="$PROJECT_DIR$/data/day-2-input.txt" afterDir="false" />
+    <list default="true" id="b9ad5f7e-d420-457a-a868-4239bdd2aa74" name="Default Changelist" comment="Day 2 Tests working, updated utils">
+      <change afterPath="$PROJECT_DIR$/data/day-3-trees-example.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/advent-of-code-2020" beforeDir="false" afterPath="$PROJECT_DIR$/advent-of-code-2020" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/main_test.go" afterDir="false" />
     </list>
@@ -15,6 +18,7 @@
   <component name="GOROOT" url="file:///usr/local/Cellar/go/1.15.5/libexec" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="ProjectId" id="1ltcCoKuiPuVFHjbKXJdIKM7LpD" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -35,7 +39,7 @@
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
-    <property name="settings.editor.selected.configurable" value="MTConfigurable" />
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -43,7 +47,7 @@
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager" selected="Go Build.go build main.go">
+  <component name="RunManager" selected="Go Test.go test advent-of-code-2020">
     <configuration name="go build main.go" type="GoApplicationRunConfiguration" factoryName="Go Application" nameIsGenerated="true">
       <module name="advent-of-code-2020" />
       <working_directory value="$PROJECT_DIR$" />
@@ -132,11 +136,16 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
+    <ignored-roots>
+      <path value="$PROJECT_DIR$/advent-of-code-2020" />
+    </ignored-roots>
     <MESSAGE value="Day 1 working " />
     <MESSAGE value="Day 2 Tests working, updating utils and tests." />
-    <option name="LAST_COMMIT_MESSAGE" value="Day 2 Tests working, updating utils and tests." />
+    <MESSAGE value="Day 2 Tests working, updated utils" />
+    <option name="LAST_COMMIT_MESSAGE" value="Day 2 Tests working, updated utils" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/advent_of_code_2020$TestSumThreeMultiply2020_in_main_test_go.out" NAME="TestSumThreeMultiply2020 in main_test.go Coverage Results" MODIFIED="1608423941614" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />

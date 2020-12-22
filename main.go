@@ -18,6 +18,11 @@ type PasswordEntry struct {
 	Password string
 }
 
+type Slope struct {
+	x int
+	y int
+}
+
 func openFileLines(ctx log.Interface, fileName string) (err error, lines []string) {
 	defer ctx.WithField("fileName", fileName).Debug("debug")
 	file, err := os.Open(fileName)
@@ -109,9 +114,49 @@ func passwordIsValidPart2(ctx log.Interface, password PasswordEntry) bool {
 	return isValid
 }
 
+func getColumn(ctx log.Interface, grid []string, columnNumber int) string {
+	columnWrapAround := columnNumber % len(grid[0])
+	var column string
+	for _, row := range grid {
+		column = column + string(row[columnWrapAround-1])
+	}
+	ctx.Debugf("column %v ", column)
+	return column
+}
+
+func getValueInGrid(ctx *log.Entry, x int, y int, grid []string) interface{} {
+	// Trim newline
+	gridSize := len(grid[0])
+	// 0 index x and y
+	x--
+	y--
+	if x >= gridSize {
+		ctx.Debugf("wrapping on grid %d, x %d after x %d", gridSize, x, (x % gridSize))
+		x = x % gridSize
+	}
+	// Grid is an array of strings, each row is a string
+	row := grid[y]
+	value := string(row[x])
+	ctx.Debugf("value %v at x: %d y: %d ", value, x, y)
+	return value
+}
+
+func getCountTrees(ctx *log.Entry, slope Slope, grid []string) interface{} {
+
+	countOfTrees := 0
+	for x, y := 1, 1; y <= len(grid); x, y = x+slope.x, y+slope.y {
+		content := getValueInGrid(ctx, x, y, grid)
+		if content == "#" {
+			countOfTrees++
+			ctx.Debugf("countOfTrees %d", countOfTrees)
+		}
+	}
+
+	return countOfTrees
+}
 func main() {
 	log.SetHandler(cli.Default)
-	log.SetLevel(log.InfoLevel)
+	log.SetLevel(log.DebugLevel)
 	pc, file, line, ok := runtime.Caller(1)
 	if !ok {
 		panic("Could not get context info for logger!")
