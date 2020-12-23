@@ -156,13 +156,13 @@ func getCountTrees(ctx *log.Entry, slope Slope, grid []string) int {
 
 	return countOfTrees
 }
-func parsePassports(ctx log.Interface, linesInFile []string) []string {
+func parseGeneric(ctx log.Interface, linesInFile []string, join_character string) []string {
 	var passes []string
 	passIndex := 0
 	passes = append(passes, "")
 	for i, line := range linesInFile {
 		if len(line) > 0 {
-			passes[passIndex] += line + " "
+			passes[passIndex] += line + join_character
 			ctx.Debugf("Found line %s", line)
 		}
 		if len(line) == 0 {
@@ -299,6 +299,70 @@ func remove(s []string, r string) []string {
 	return s
 }
 
+func calculateRow(ctx log.Interface, seat string) (int, int, int) {
+
+	totalRows := 128
+	var rowArray []int
+	for row := 0; row < totalRows; row++ {
+		rowArray = append(rowArray, row)
+	}
+	totalColumns := 8
+	var columnArray []int
+	for column := 0; column < totalColumns; column++ {
+		columnArray = append(columnArray, column)
+	}
+	for i := 0; i < 10; i++ {
+		letter := string(seat[i])
+		if letter == "F" {
+			// Front so grab the start of the rows
+			rowArray = rowArray[:len(rowArray)/2]
+		}
+		if letter == "B" {
+			// Back so grab the end of the rows
+			rowArray = rowArray[len(rowArray)/2:]
+		}
+		if letter == "L" {
+			// Front so grab the start of the rows
+			columnArray = columnArray[:len(columnArray)/2]
+		}
+		if letter == "R" {
+			// Front so grab the start of the rows
+			columnArray = columnArray[len(columnArray)/2:]
+		}
+	}
+	seatID := rowArray[0]*8 + columnArray[0]
+	ctx.Debugf("seaID %v %s", seatID, seat)
+	return rowArray[0], columnArray[0], seatID
+}
+
+func sumQuestions(answers string) int {
+	check := make(map[string]int)
+
+	for _, val := range answers {
+		check[string(val)] = 1
+	}
+	return len(check)
+}
+
+func sumAnswersPt2(answers string) int {
+	check := make(map[string]int)
+	// Trim the last : then split
+	people := strings.Split(answers[:len(answers)-1], ":")
+
+	for _, person := range people {
+		for _, val := range person {
+			strings.Contains(person, string(val))
+			check[string(val)] += 1
+		}
+	}
+	for k, v := range check {
+		if v != len(people) {
+			delete(check, k)
+		}
+
+	}
+	return len(check)
+}
 func main() {
 	log.SetHandler(cli.Default)
 	log.SetLevel(log.DebugLevel)
@@ -341,7 +405,7 @@ func main() {
 	fmt.Printf("Day 3 Part 2 Trees answer: %d", treeCount)
 
 	_, linesInFile = openFileLines(ctx, "./data/day-4-passports.txt")
-	passportList := parsePassports(ctx, linesInFile)
+	passportList := parseGeneric(ctx, linesInFile, " ")
 	validPassports := 0
 	for _, passport := range passportList {
 		if validatePassport(ctx, passport) {
@@ -349,4 +413,5 @@ func main() {
 		}
 	}
 	fmt.Printf("Day 4 Part 1 passports answer: %d", validPassports)
+
 }

@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b9ad5f7e-d420-457a-a868-4239bdd2aa74" name="Default Changelist" comment="Day 2 Tests working, updated utils">
-      <change afterPath="$PROJECT_DIR$/data/day-4-examples-pt2-invalid.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/day-4-examples-pt2-valid.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/day-5-seating.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/day-6-custom-declaration-example.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/day-6-custom-declaration.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/main_test.go" afterDir="false" />
@@ -37,7 +38,7 @@
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
-    <property name="settings.editor.selected.configurable" value="net.vektah.codeglance.config.ConfigEntry" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Color Scheme Font" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -48,7 +49,7 @@
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager" selected="Go Build.go build main.go">
+  <component name="RunManager" selected="Go Test.go test advent-of-code-2020">
     <configuration name="go build main.go" type="GoApplicationRunConfiguration" factoryName="Go Application" nameIsGenerated="true">
       <module name="advent-of-code-2020" />
       <working_directory value="$PROJECT_DIR$" />
@@ -65,6 +66,16 @@
       <filePath value="main.go" />
       <directory value="$PROJECT_DIR$" />
       <output_directory value="$PROJECT_DIR$/bin" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestParseAnswersPt2 in main_test.go" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="advent-of-code-2020" />
+      <working_directory value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <kind value="FILE" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/main_test.go" />
+      <pattern value="^\QTestParseAnswersPt2\E$" />
       <method v="2" />
     </configuration>
     <configuration name="TestParsePasswordEntry in main_test.go" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
@@ -114,9 +125,11 @@
       <item itemvalue="Go Test.TestSumThreeMultiply2020 in main_test.go" />
       <item itemvalue="Go Test.TestSumTwoMultiply2020 in main_test.go" />
       <item itemvalue="Go Test.TestParsePasswordEntry in main_test.go" />
+      <item itemvalue="Go Test.TestParseAnswersPt2 in main_test.go" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Go Test.TestParseAnswersPt2 in main_test.go" />
         <item itemvalue="Go Test.TestParsePasswordEntry in main_test.go" />
         <item itemvalue="Go Test.TestSumThreeMultiply2020 in main_test.go" />
         <item itemvalue="Go Test.TestSumTwoMultiply2020 in main_test.go" />
@@ -148,8 +161,10 @@
     <MESSAGE value="Day 2 Tests working, updated utils" />
     <MESSAGE value="Day 3 trees tests passing" />
     <MESSAGE value="Day 3 trees tests with solution" />
+    <MESSAGE value="Day 4 passports tests with solution for part 2" />
     <MESSAGE value="Day 4 passports tests with solution for part 1" />
-    <option name="LAST_COMMIT_MESSAGE" value="Day 4 passports tests with solution for part 1" />
+    <MESSAGE value="Day 6 Customs Declaration all test passing." />
+    <option name="LAST_COMMIT_MESSAGE" value="Day 6 Customs Declaration all test passing." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/advent_of_code_2020$TestSumThreeMultiply2020_in_main_test_go.out" NAME="TestSumThreeMultiply2020 in main_test.go Coverage Results" MODIFIED="1608423941614" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />

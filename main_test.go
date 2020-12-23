@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"github.com/apex/log"
 	"github.com/apex/log/handlers/cli"
 	"github.com/google/go-cmp/cmp"
+	"sort"
 	"testing"
 	"time"
 )
@@ -254,7 +256,7 @@ func TestParsePassports(t *testing.T) {
 	_, linesInFile := openFileLines(ctx, "./data/day-4-passports-example.txt")
 
 	want := "hcl:#ae17e1 iyr:2013 eyr:2024 ecl:brn pid:760753108 byr:1931 hgt:179cm"
-	parsedPassports := parsePassports(ctx, linesInFile)
+	parsedPassports := parseGeneric(ctx, linesInFile, " ")
 	got := parsedPassports[2]
 	if got != want {
 		t.Errorf("wanted %s got %s", want, got)
@@ -265,7 +267,7 @@ func TestValidatePassportEntry(t *testing.T) {
 
 	_, linesInFile := openFileLines(ctx, "./data/day-4-passports-example.txt")
 
-	parsedPassports := parsePassports(ctx, linesInFile)
+	parsedPassports := parseGeneric(ctx, linesInFile, " ")
 	for _, test := range []struct {
 		expected bool
 		entry    int
@@ -288,7 +290,7 @@ func TestValidatePassportEntryPt2(t *testing.T) {
 
 	_, linesInFile := openFileLines(ctx, "./data/day-4-examples-pt2-invalid.txt")
 
-	parsedPassportsInvalid := parsePassports(ctx, linesInFile)
+	parsedPassportsInvalid := parseGeneric(ctx, linesInFile, " ")
 	for _, passport := range parsedPassportsInvalid {
 		passportValidation := validatePassport(ctx, passport)
 		if passportValidation {
@@ -297,11 +299,161 @@ func TestValidatePassportEntryPt2(t *testing.T) {
 	}
 	_, linesInFile = openFileLines(ctx, "./data/day-4-examples-pt2-valid.txt")
 
-	parsedPassportsValid := parsePassports(ctx, linesInFile)
+	parsedPassportsValid := parseGeneric(ctx, linesInFile, " ")
 	for _, passport := range parsedPassportsValid {
 		passportValidation := validatePassport(ctx, passport)
 		if !passportValidation {
 			t.Errorf("Expected valid got %t", passportValidation)
 		}
+	}
+}
+
+func TestSeatingAllocation(t *testing.T) {
+	ctx := logInit()
+
+	_, linesInFile := openFileLines(ctx, "./data/day-5-seating.txt")
+	maxSeatValue := 0
+	var seatingList map[int]string
+	seatingList = make(map[int]string)
+
+	for _, line := range linesInFile {
+		_, _, seatID := calculateRow(ctx, line)
+		if seatID > maxSeatValue {
+			maxSeatValue = seatID
+		}
+		seatingList[seatID] = line
+	}
+	// To store the keys in slice in sorted order
+	var keys []int
+	for k := range seatingList {
+		keys = append(keys, k)
+	}
+	sort.Ints(keys)
+
+	//for i, k := range keys {
+	//	if i < len(keys){
+	//		if keys[i+1] - k > 1 {
+	//			fmt.Println("Key:", k, "Value:", seatingList[k])
+	//		}
+	//	}
+	//}
+	lastKey := 0
+	for _, k := range keys {
+		if (k - lastKey) > 1 {
+			fmt.Println("Missing seat Key:", k-1)
+		}
+		lastKey = k
+	}
+
+	if maxSeatValue != 901 {
+		t.Errorf("Expected Max Seat ID 901 got %d", maxSeatValue)
+	}
+
+	for _, test := range []struct {
+		seat   string
+		row    int
+		column int
+		seatID int
+	}{
+		{"FBFBBFFRLR", 44, 5, 357},
+		{"BFFFBBFRRR", 70, 7, 567},
+		{"FFFBBBFRRR", 14, 7, 119},
+		{"BBFFBBFRLL", 102, 4, 820},
+	} {
+		gotRow, gotColumn, gotSeatID := calculateRow(ctx, test.seat)
+		if gotRow != test.row {
+			t.Errorf(
+				"Expected row %d got %d for %s",
+				test.row, gotRow, test.seat)
+		}
+		if gotColumn != test.column {
+			t.Errorf(
+				"Expected column %d got %d for %s",
+				test.column, gotColumn, test.seat)
+		}
+		if gotSeatID != test.seatID {
+			t.Errorf(
+				"Expected seatID %d got %d for %s",
+				test.seatID, gotSeatID, test.seat)
+		}
+	}
+}
+func TestParseQuestions(t *testing.T) {
+	ctx := logInit()
+
+	_, linesInFile := openFileLines(ctx, "./data/day-6-custom-declaration-example.txt")
+
+	want := "abc"
+	parsedQuestions := parseGeneric(ctx, linesInFile, "")
+	got := parsedQuestions[1]
+	if got != want {
+		t.Errorf("wanted %s got %s", want, got)
+	}
+	totalQuestionSum := 0
+	for index, test := range []struct {
+		sum int
+	}{
+		{3},
+		{3},
+		{3},
+		{1},
+		{1},
+	} {
+
+		gotSum := sumQuestions(parsedQuestions[index])
+		if gotSum != test.sum {
+			t.Errorf("wanted %d got %d for %s", test.sum, gotSum, parsedQuestions[index])
+		}
+		totalQuestionSum += gotSum
+	}
+	if totalQuestionSum != 11 {
+		t.Errorf("wanted 11 got %d ", totalQuestionSum)
+	}
+
+	fmt.Printf("Total Question Sum %d", totalQuestionSum)
+
+	_, linesInFile = openFileLines(ctx, "./data/day-6-custom-declaration.txt")
+	parsedAnswers := parseGeneric(ctx, linesInFile, "")
+
+	totalQuestionSum = 0
+	for _, answers := range parsedAnswers {
+		totalQuestionSum += sumQuestions(answers)
+	}
+
+	fmt.Printf("Total Question Sum %d", totalQuestionSum)
+}
+func TestParseAnswersPt2(t *testing.T) {
+	ctx := logInit()
+	_, linesInFile := openFileLines(ctx, "./data/day-6-custom-declaration-example.txt")
+	parsedQuestions := parseGeneric(ctx, linesInFile, ":")
+	totalQuestionSum := 0
+	for index, test := range []struct {
+		sum int
+		//3 + 0 + 1 + 1 + 1
+	}{
+		{3},
+		{0},
+		{1},
+		{1},
+		{1},
+	} {
+
+		gotSum := sumAnswersPt2(parsedQuestions[index])
+		if gotSum != test.sum {
+			t.Errorf("wanted %d got %d for %s", test.sum, gotSum, parsedQuestions[index])
+		}
+		totalQuestionSum += gotSum
+	}
+	_, linesInFile = openFileLines(ctx, "./data/day-6-custom-declaration.txt")
+	parsedAnswers := parseGeneric(ctx, linesInFile, ":")
+
+	totalQuestionSum = 0
+	for _, answers := range parsedAnswers {
+		totalQuestionSum += sumAnswersPt2(answers)
+	}
+
+	fmt.Printf("Total Question Sum %d", totalQuestionSum)
+	if totalQuestionSum != 3243 {
+		t.Errorf("wanted 3243 got %d", totalQuestionSum)
 	}
 }
