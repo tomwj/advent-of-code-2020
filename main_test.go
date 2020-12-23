@@ -17,6 +17,14 @@ var accounts = []int64{
 	1456,
 }
 
+func logInit() *log.Entry {
+	log.SetHandler(cli.Default)
+	log.SetLevel(log.InfoLevel)
+	ctx := log.WithFields(log.Fields{
+		"func": "TestSuite",
+	})
+	return ctx
+}
 func TestSumTwoMultiply2020(t *testing.T) {
 
 	got := sumTwoMultiply2020(accounts)
@@ -213,12 +221,7 @@ func TestMultiSlopeCountTree(t *testing.T) {
 	}
 }
 func TestMultiSlopeCountTreeSolution(t *testing.T) {
-	log.SetHandler(cli.Default)
-	log.SetLevel(log.InfoLevel)
-	ctx := log.WithFields(log.Fields{
-		"func": "TestCountTrees",
-	})
-
+	ctx := logInit()
 	_, linesInFile := openFileLines(ctx, "./data/day-3-trees.txt")
 
 	// Right 1, down 1.
@@ -243,5 +246,62 @@ func TestMultiSlopeCountTreeSolution(t *testing.T) {
 	want := 2224913600
 	if productOfTreeCounts != want {
 		t.Errorf("wanted %d got %v", want, productOfTreeCounts)
+	}
+}
+func TestParsePassports(t *testing.T) {
+	ctx := logInit()
+
+	_, linesInFile := openFileLines(ctx, "./data/day-4-passports-example.txt")
+
+	want := "hcl:#ae17e1 iyr:2013 eyr:2024 ecl:brn pid:760753108 byr:1931 hgt:179cm"
+	parsedPassports := parsePassports(ctx, linesInFile)
+	got := parsedPassports[2]
+	if got != want {
+		t.Errorf("wanted %s got %s", want, got)
+	}
+}
+func TestValidatePassportEntry(t *testing.T) {
+	ctx := logInit()
+
+	_, linesInFile := openFileLines(ctx, "./data/day-4-passports-example.txt")
+
+	parsedPassports := parsePassports(ctx, linesInFile)
+	for _, test := range []struct {
+		expected bool
+		entry    int
+	}{
+		{true, 0},
+		{false, 1},
+		{true, 2},
+		{false, 3},
+	} {
+		passportValidation := validatePassport(ctx, parsedPassports[test.entry])
+		if passportValidation != test.expected {
+			t.Errorf(
+				"Expected %t got %t for %s",
+				test.expected, passportValidation, parsedPassports[test.entry])
+		}
+	}
+}
+func TestValidatePassportEntryPt2(t *testing.T) {
+	ctx := logInit()
+
+	_, linesInFile := openFileLines(ctx, "./data/day-4-examples-pt2-invalid.txt")
+
+	parsedPassportsInvalid := parsePassports(ctx, linesInFile)
+	for _, passport := range parsedPassportsInvalid {
+		passportValidation := validatePassport(ctx, passport)
+		if passportValidation {
+			t.Errorf("Expected invalid got %t", passportValidation)
+		}
+	}
+	_, linesInFile = openFileLines(ctx, "./data/day-4-examples-pt2-valid.txt")
+
+	parsedPassportsValid := parsePassports(ctx, linesInFile)
+	for _, passport := range parsedPassportsValid {
+		passportValidation := validatePassport(ctx, passport)
+		if !passportValidation {
+			t.Errorf("Expected valid got %t", passportValidation)
+		}
 	}
 }
